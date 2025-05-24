@@ -26,6 +26,20 @@ public class Guardia extends Personaje implements Enemigo {
         }
     }
 
+    public int[] getMovimientoAleatorio() {
+        Random rand = new Random();
+        int direccion = rand.nextInt(4) + 1;
+
+        return switch (direccion) {
+            case 1 -> new int[]{-1, 0}; // Izquierda
+            case 2 -> new int[]{0, -1}; // Arriba
+            case 3 -> new int[]{1, 0};  // Derecha
+            case 4 -> new int[]{0, 1};  // Abajo
+            default -> new int[]{0, 0}; // Sin movimiento
+        };
+    }
+
+
     // Reescribimos la funcion de atacar()
     @Override
     public void atacar(Personaje objetivo) {
@@ -36,15 +50,10 @@ public class Guardia extends Personaje implements Enemigo {
     // Reescribimos la funcion detectar()
     @Override
     public boolean detectar(Personaje objetivo) {
-        int x = this.posicion.getX();
-        int y = this.posicion.getY();
-        int ox = objetivo.getPosicion().getX();
-        int oy = objetivo.getPosicion().getY();
-        // Verificamos si el objetivo está a la izquierda, derecha, arriba o abajo devolvemos true
-        return  (x == ox && y == oy - 1) ||  // Abajo
-                (x == ox && y == oy + 1) ||  // Arriba
-                (x == ox - 1 && y == oy) ||  // Derecha
-                (x == ox + 1 && y == oy);    // Izquierda
-    }
+        int dx = Math.abs(objetivo.getPosicion().getX() - this.getPosicion().getX());
+    int dy = Math.abs(objetivo.getPosicion().getY() - this.getPosicion().getY());
 
+    // A distancia 1 en eje horizontal o vertical (no diagonal)
+    return (dx == 1 && dy == 0) || (dx == 0 && dy == 1);
+    }
 }
